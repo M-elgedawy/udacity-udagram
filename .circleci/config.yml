@@ -47,8 +47,8 @@ jobs:
 workflows:
   udagram:
     jobs:
-      -build
-      -debloy          
+      - build
+      - debloy          
         
 
  

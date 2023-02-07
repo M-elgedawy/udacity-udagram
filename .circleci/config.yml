@@ -9,11 +9,13 @@ jobs:
   build:
     docker:
       # the base image can run most needed actions with orbs
-      - image: "cimg/node:14.15"
+      - image: "cimg/base:stable"
     steps:
       # install node and checkout code
       - node/install:
-          node-version: '14.15'         
+          node-version: '14.15'
+      - eb/setup
+      - aws-cli/setup             
       - checkout
       # Use root level package.json to install dependencies in the frontend app
       - run:
@@ -28,37 +30,43 @@ jobs:
       - run:
           name: API Build
           command: npm run api:build
-  deploy:
-    docker:
-        - image: "cimg/base:stable"
-      # more setup needed for aws, node, elastic beanstalk
-    steps:
-      - node/install:
-          node-version: '14.15' 
-      - eb/setup
-      - aws-cli/setup
-      - checkout
       - run:
           name: Deploy Backend Application
-          command: npm run api:deploy
+          command: npm run api:deploy 
       - run:
           name: Deploy Frontend Application
-          command: npm run frontend:deploy  
-workflows:
-  udagram:
-    jobs:
-      - build
-      - hold:
-          filters:
-            branches:
-              only:
-                - master
-          type: approval
-          requires:
-            - build
-      - deploy:
-          requires:
-            - hold          
+          command: npm run frontend:deploy       
+#   deploy:
+#     docker:
+#         - image: "cimg/base:stable"
+#       # more setup needed for aws, node, elastic beanstalk
+#     steps:
+#       - node/install:
+#           node-version: '14.15' 
+#       - eb/setup
+#       - aws-cli/setup
+#       - checkout
+#       - run:
+#           name: Deploy Backend Application
+#           command: npm run api:deploy
+#       - run:
+#           name: Deploy Frontend Application
+#           command: npm run frontend:deploy  
+# workflows:
+#   udagram:
+#     jobs:
+#       - build
+#       - hold:
+#           filters:
+#             branches:
+#               only:
+#                 - master
+#           type: approval
+#           requires:
+#             - build
+#       - deploy:
+#           requires:
+#             - hold          
         
 
  

@@ -30,7 +30,7 @@ jobs:
           command: npm run api:build
   deploy:
     docker:
-      - image: "cimg/base:stable"
+        - image: "cimg/base:stable"
       # more setup needed for aws, node, elastic beanstalk
     steps:
       - node/install:
@@ -44,6 +44,11 @@ jobs:
       - run:
           name: Deploy Frontend Application
           command: npm run frontend:deploy  
+workflows:
+  udagram:
+    jobs:
+      -build
+      -debloy          
         
 
  
